@@ -1,0 +1,29 @@
+# snapshots a container
+
+CONTAINER_NAME=$1
+
+EXPECTED_ARGS=1
+if [ $# -ne $EXPECTED_ARGS ]; then
+        echo "usage"
+        echo "-----"
+	echo "specify snapshot_container CONTAINER_NAME"
+ 	exit 1
+fi
+
+sudo lxc-stop -n $CONTAINER_NAME
+
+sudo lxc-snap $CONTAINER_NAME
+
+if [ "$?" != "0" ]; then
+	echo "unable to snapshot $CONTAINER_NAME"
+	exit 1
+fi
+
+echo "created snapshot for $CONTAINER_NAME"
+
+echo "running lxc-snap to list out all snapshots for this container"
+echo ""
+lxc-snap -l $CONTAINER_NAME 
+
+echo ""
+echo "success"

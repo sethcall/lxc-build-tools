@@ -1,0 +1,7 @@
+Gemfile.lock
+Cheffile.lock
+*~
+tmp
+.chef
+client-config
+

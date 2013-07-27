@@ -1,0 +1,38 @@
+# creates a container that can be easily snapshot/reverted for build automation.
+# Expects that you'll be commonly ssh'ing to the machine  as the current user running this script, and that this current user has a ssh key active in ~/.ssh/id_rsa.pub, which will be installed into authorized_keys on the container
+
+CONTAINER_NAME=$1
+
+EXPECTED_ARGS=1
+if [ $# -ne $EXPECTED_ARGS ]; then
+        echo "usage"
+        echo "-----"
+	echo "specify create_container CONTAINER_NAME"
+ 	exit 1
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+AUTH_KEY=~/.ssh/id_rsa.pub
+
+sudo lxc-create -n "${CONTAINER_NAME}-base" -t ${DIR}/templates/ubuntu-nopasswd -- --release precise --auth-key "$AUTH_KEY" 
+if [ "$?" != "0" ]; then
+	echo "unable to create ${CONTAINER_NAME}-base"
+	exit 1
+fi
+
+sudo lxc-clone -s -B overlayfs ${CONTAINER_NAME}-base ${CONTAINER_NAME}
+if [ "$?" != "0" ]; then
+	echo "unable to create overlay $CONTAINER_NAME"
+	exit 1
+fi
+
+sudo lxc-start -n "${CONTAINER_NAME}" -d
+if [ "$?" != "0" ]; then
+	"unable to start $CONTAINER_NAME"
+	exit 1
+fi
+
+echo "created and started container '$CONTAINER_NAME'"
+echo "success"
+

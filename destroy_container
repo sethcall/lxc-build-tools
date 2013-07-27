@@ -1,0 +1,18 @@
+# destroys a container
+
+CONTAINER_NAME=$1
+
+EXPECTED_ARGS=1
+if [ $# -ne $EXPECTED_ARGS ]; then
+        echo "usage"
+        echo "-----"
+	echo "specify destroy_container CONTAINER_NAME"
+ 	exit 1
+fi
+
+
+sudo lxc-stop -n "${CONTAINER_NAME}"
+sudo lxc-destroy -n "${CONTAINER_NAME}"
+sudo lxc-destroy -n "${CONTAINER_NAME}-base"
+
+exit $?

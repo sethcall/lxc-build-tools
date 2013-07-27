@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# resets a container to a snapshot
+
+# heavily follows here: http://s3hh.wordpress.com/2013/05/06/introducing-lxc-snap/
+
+# before this script will work, you had to have made a container, and a snapshot for it.  
+CONTAINER_NAME=$1
+SNAPSHOT_NAME=$2
+
+EXPECTED_ARGS=2
+if [ $# -ne $EXPECTED_ARGS ]; then
+        echo "usage"
+        echo "-----"
+	echo "specify reset_container CONTAINER_NAME SNAPSHOT_NAME"
+ 	exit 1
+fi
+
+sudo lxc-stop -n "$CONTAINER_NAME"
+sudo lxc-destroy -n "$CONTAINER_NAME"
+sudo lxc-snap -r "$SNAPSHOT_NAME" "$CONTAINER_NAME"
+
+if [ "$?" != "0" ]; then
+	echo "failed to restore $CONTAINER_NAME from snapshot $SNAPSHOT"
+	exit 1
+fi
+
+
+sudo lxc-start -d -n "$CONTAINER_NAME"
+
+if [ "$?" != "0" ]; then
+	echo "failed to start $CONTAINER_NAME"
+	exit 1
+fi
+
+echo "restored $CONTAINER_NAME from snapshot $SNAPSHOT_NAME"
+echo "success"
+
+
+
