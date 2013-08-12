@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# install chef on a container using knife. assumes container name is accessible via network, and username/password is ubuntu
+
+CONTAINER_NAME="$1"
+
+EXPECTED_ARGS=1
+if [ $# -ne $EXPECTED_ARGS ]; then
+        echo "usage"
+        echo "-----"
+	echo "specify install_chef CONTAINER_NAME"
+ 	exit 1
+fi
+
+ssh ubuntu@$CONTAINER_NAME -C "sudo apt-get install -y --force-yes wget curl ca-certificates apt-transport-https aptitude" 
+ssh ubuntu@$CONTAINER_NAME -C "sudo locale-gen en_US en_US.UTF-8" 
+ssh ubuntu@$CONTAINER_NAME -C "sudo dpkg-reconfigure locales" 
+ssh ubuntu@$CONTAINER_NAME -C "sudo apt-get install incron" 
+
+ssh ubuntu@$CONTAINER_NAME -C "curl -L https://www.opscode.com/chef/install.sh | sudo bash"
