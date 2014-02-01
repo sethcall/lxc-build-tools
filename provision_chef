@@ -17,4 +17,5 @@ ssh ubuntu@$CONTAINER_NAME -C "sudo locale-gen en_US en_US.UTF-8"
 ssh ubuntu@$CONTAINER_NAME -C "sudo dpkg-reconfigure locales" 
 ssh ubuntu@$CONTAINER_NAME -C "sudo apt-get install incron" 
 
-ssh ubuntu@$CONTAINER_NAME -C "curl -L https://www.opscode.com/chef/install.sh | sudo bash"
+# install chef 11.8.2 debian for ubuntu 12.04
+ssh ubuntu@$CONTAINER_NAME -C "wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chef_11.8.2-1.ubuntu.12.04_amd64.deb && sudo dpkg -i chef_11.8.2-1.ubuntu.12.04_amd64.deb"

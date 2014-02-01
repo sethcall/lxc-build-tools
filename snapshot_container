@@ -1,3 +1,4 @@
+#!/bin/bash
 # snapshots a container
 
 CONTAINER_NAME=$1
