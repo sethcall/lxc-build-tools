@@ -12,6 +12,7 @@ if [ $# -ne $EXPECTED_ARGS ]; then
  	exit 1
 fi
 
+ssh ubuntu@$CONTAINER_NAME -C "sudo apt-get update" 
 ssh ubuntu@$CONTAINER_NAME -C "sudo apt-get install -y --force-yes wget curl ca-certificates apt-transport-https aptitude" 
 ssh ubuntu@$CONTAINER_NAME -C "sudo locale-gen en_US en_US.UTF-8" 
 ssh ubuntu@$CONTAINER_NAME -C "sudo dpkg-reconfigure locales" 
